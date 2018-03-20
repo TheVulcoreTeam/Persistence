@@ -59,8 +59,8 @@ func _ready():
 # Métodos públicos
 #
 
-# Salva el juego con el profile por defecto. Si no hay profile o no se logra
-# guardar la data devuelve false; si se logra guardar la data devuelve true.
+# Salva el juego con el profile indicado en el parámetro profile_name. 
+# Si no hay profile crea un profile por defecto llamado default. 
 func save_data(profile_name = null):
 	var result
 	
@@ -269,6 +269,10 @@ func load_profile_encripted(profile_name):
 	var file_path
 	file_path = str("user://" + folder_name + "/" + profile_name + ".bin")
 	
+	if not file.file_exists(file_path):
+		if debug: print("[PersistenceNode] El archivo no existe: " + file_path)
+		return false
+	
 	var file = File.new()
 	var err = file.open_encrypted_with_pass(file_path, File.READ, password)
 	
@@ -288,6 +292,11 @@ func load_profile_text(profile_name):
 	file_path = str("user://" + folder_name + "/" + profile_name + ".txt")
 	
 	var file = File.new()
+	
+	if not file.file_exists(file_path):
+		if debug: print("[PersistenceNode] El archivo no existe: " + file_path)
+		return false
+	
 	var err = file.open(file_path, File.READ)
 	
 	if err == OK:
