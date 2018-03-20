@@ -42,6 +42,9 @@ export (int) var profile_name_max_size = 15
 var data = {"test":{"test2":"test3"}} setget , get_data
 var current_profile setget set_current_profile, get_current_profile
 
+signal saved
+signal loaded
+
 func _init():
 	if beautifier_active:
 		beautifier = load("res://addons/PersistenceNode/json_beautifier.gd").new()
@@ -65,6 +68,7 @@ func save_data(profile_name = null):
 		# Crea el profile por defecto, en el caso de que no se quiera
 		# utilizar profiles.
 		save_profile_default()
+		return true # TODO: save_profile_default debe de dar el resultado
 	
 	if validate_profile(profile_name):
 		match mode:
@@ -75,19 +79,69 @@ func save_data(profile_name = null):
 	else:
 		if debug: print("[PersistenceNode] No ha pasado la validación")
 		result = false
+	
+	if result:
+		emit_signal("saved")
+	
+	return result
 
+# Carga la data, si no se le pasa ningún argumento entonces carga la data
+# por defecto, si se le pasa argumento entonces carga la data indicada en el.
+# Devuelve true si se carga exitosamente y false si no lo hace.
 func load_data(profile_name = null):
+	var result
+	
 	if profile_name == null:
 		load_profile_default()
+		return true
 	
+	if validate_profile(profile_name):
+		match mode:
+			MODE_ENCRYPTED:
+				result = load_profile_encripted(profile_name)
+			MODE_TEXT:
+				result = load_profile_text(profile_name)
+	else:
+		if debug: print("[PersistenceNode] No ha pasado la validación")
+		result = false
+	
+	if result:
+		emit_signal("loaded")
+	
+	return result
+
+# Remueve el profile indicado como argumento. Tome en cuenta que para
+# eliminar el encriptado o el texto, debe establecer primero el modo
+# con set_mode().
 func remove_profile(profile_name):
-	pass
+	var dir = Directory.new()
+	var path
+	
+	match mode:
+		MODE_ENCRYPTED:
+			path = "user://" + folder_name + "/" + profile_name + ".bin"
+		MODE_TEXT:
+			path = "user://" + folder_name + "/" + profile_name + ".txt"
+	
+	var err = dir.remove(path)
+	
+	if err != OK:
+		if debug: print("[PersistenceNode] Error al remover el profile: ", err)
 
-func load_profile(profile_name):
-	pass
-
+# Remueve toda la data dentro de la carpeta "folder_name" sin importar
+# si esta encriptada o no.
 func remove_all_data():
-	pass
+	var dir = Directory.new()
+	var profiles = get_profiles()
+	
+	if profiles != null:
+		var path = "user://" + folder_name + "/"
+		
+		for i in range(profiles.size()):
+			dir.remove(str(path + profiles[i]))
+	else:
+		if debug: print("[PersistenceNode] No se a removido ningún archivo.")
+	
 
 # Setters/Getters
 #
@@ -100,8 +154,13 @@ func set_mode(_mode):
 func get_mode():
 	return mode
 	
-func get_data():
-	return data
+func get_data(profile_name = null):
+	if profile_name == null:
+		load_data()
+		return data
+	else:
+		load_data(profile_name)
+		return data
 
 # Retorna los perfiles existentes
 func get_profiles():
@@ -152,19 +211,19 @@ func validate_profile(profile_name):
 		return false
 	
 	# 3)
-	if profile_name.size() >= profile_name_min_size and profile_name.size() <= profile_name_max_size:
+	if profile_name.length() > profile_name_min_size and profile_name.length() + 1 < profile_name_max_size:
 		return false
 	
 	return true
 	
-func save_default_profile():
+func save_profile_default():
 	match mode:
 		MODE_ENCRYPTED:
 			save_profile_encripted("default")
 		MODE_TEXT:
 			save_profile_text("default")
 
-func load_default_profile():
+func load_profile_default():
 	match mode:
 		MODE_ENCRYPTED:
 			load_profile_encripted("default")
@@ -194,7 +253,7 @@ func save_profile_text(profile_name):
 	var err = file.open(file_path, File.WRITE_READ)
 	
 	if err == OK:
-		file.get_var() # Borrar la data anterior
+		file.get_line() # Borrar la data anterior
 		file.store_string(to_json(data))
 		
 		if beautifier_active:
@@ -232,7 +291,7 @@ func load_profile_text(profile_name):
 	var err = file.open(file_path, File.READ)
 	
 	if err == OK:
-		data = parse_json(file.get_var())
+		data = parse_json(file.get_line())
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.
 		save_profile_text(profile_name)
@@ -251,13 +310,4 @@ func print_json(json):
 		print("__________- JSON -__________")
 		print(beautifier.beautify_json(json))
 		print("____________________________")
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	

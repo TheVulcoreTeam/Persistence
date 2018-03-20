@@ -14,6 +14,11 @@ config/name="PersistenceNode"
 run/main_scene="res://Test.tscn"
 config/icon="res://icon.png"
 
+[display]
+
+window/size/width=300
+window/size/height=300
+
 [editor_plugins]
 
 enabled=PoolStringArray( "PersistenceNode" )
