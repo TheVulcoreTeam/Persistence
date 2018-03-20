@@ -269,11 +269,12 @@ func load_profile_encripted(profile_name):
 	var file_path
 	file_path = str("user://" + folder_name + "/" + profile_name + ".bin")
 	
+	var file = File.new()
+	
 	if not file.file_exists(file_path):
 		if debug: print("[PersistenceNode] El archivo no existe: " + file_path)
 		return false
 	
-	var file = File.new()
 	var err = file.open_encrypted_with_pass(file_path, File.READ, password)
 	
 	if err == OK:
@@ -282,6 +283,7 @@ func load_profile_encripted(profile_name):
 		# se borran los datos en disco.
 		save_profile_encripted(profile_name)
 		
+		if debug: print("[PersistenceNode] Se a cargado el archivo con éxito: ")
 		return true
 	else:
 		if debug: print("[PersistenceNode] Error al leer el archivo: ", err)
