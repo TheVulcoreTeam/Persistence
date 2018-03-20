@@ -14,8 +14,11 @@ script = ExtResource( 2 )
 __meta__ = {
 "_editor_icon": ExtResource( 3 )
 }
-debug = true
-folder_name = "PersistenceNode"
 mode = 0
+password = "123"
+folder_name = "PersistenceNode"
+no_valid_names = [ "example_1", "example_2" ]
+debug = true
+beautifier_active = true
 
 
