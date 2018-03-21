@@ -10,7 +10,7 @@ func _ready():
 #	print(data)
 
 	var data = $Persistence.get_data("1234")
-	data["algo_nuevo2"] = "nuevo2"
+	data["algo_nuevo4"] = "nuevo4"
 	print(data)
 	
 	$Persistence.save_data("1234")

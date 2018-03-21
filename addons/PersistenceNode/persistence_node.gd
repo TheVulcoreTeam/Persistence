@@ -25,25 +25,25 @@ extends Node
 
 enum Mode {MODE_ENCRYPTED, MODE_TEXT}
 export (Mode) var mode = MODE_ENCRYPTED setget set_mode, get_mode
-export (String) var password = ""
-export (String) var folder_name = "PersistenceNode"
-export (Array) var no_valid_names = ["default", "example"] setget , get_no_valid_names
-export (bool) var debug = false
+export (String) var password = "" setget set_password, get_password
+export (String) var folder_name = "PersistenceNode" setget set_folder_name, get_folder_name
+export (Array) var no_valid_names = ["default", "example"] setget _private, get_no_valid_names
+export (bool) var debug = false setget set_debug, get_debug
 
 # Source: https://github.com/YeldhamDev/json-beautifier-for-godot
-var beautifier
-export (bool) var beautifier_active = true
+var beautifier setget _private, _private
+export (bool) var beautifier_active = true setget set_beautifier_active, get_beautifier_active
 
-export (int) var profile_name_min_size = 3
-export (int) var profile_name_max_size = 15
+export (int) var profile_name_min_size = 3 setget set_profile_name_min_size, get_profile_name_min_size
+export (int) var profile_name_max_size = 15 setget set_profile_name_max_size, get_profile_name_max_size
 
 # Data del profile actual, esta data se puede modificar y luego usar
 # save_data()
-var data = {"test":{"test2":"test3"}} setget , get_data
+var data = {"test":{"test2":"test3"}} setget _private, get_data
 var current_profile setget set_current_profile, get_current_profile
 
 # Se hace una excepción para evitar la señal de load
-var load_signal_exception = false
+var load_signal_exception = false setget _private, _private
 
 signal saved
 signal loaded
@@ -74,6 +74,10 @@ func _on_loaded():
 		load_signal_exception = false
 		if debug: print("[PersistenceNode] _on_loaded()")
 		print_json(to_json(data))
+
+func _private(val = null): 
+    print("Acceso de escritura/lectura es privado")
+    print_stack()
 
 # Métodos públicos
 #
@@ -212,6 +216,42 @@ func set_current_profile(_current_profile):
 func get_current_profile():
 	return current_profile
 
+func set_password(_password):
+	password = _password
+	
+func get_password():
+	return password
+
+func set_folder_name(_folder_name):
+	folder_name = _folder_name
+	
+func get_folder_name():
+	return folder_name
+
+func set_debug(_debug):
+	debug = _debug
+	
+func get_debug():
+	return debug
+
+func set_beautifier_active(_beautifier_active):
+	beautifier_active = _beautifier_active
+	
+func get_beautifier_active():
+	return beautifier_active
+	
+func set_profile_name_min_size(_profile_name_min_size):
+	profile_name_min_size = _profile_name_min_size
+	
+func get_profile_name_min_size():
+	return profile_name_min_size
+	
+func set_profile_name_max_size(_profile_name_max_size):
+	profile_name_max_size = _profile_name_max_size
+	
+func get_profile_name_max_size():
+	return profile_name_max_size
+
 # Métodos "privados" (No usar)
 #
 
@@ -258,12 +298,16 @@ func save_profile_encripted(profile_name):
 	var file_path
 	file_path = str("user://" + folder_name + "/" + profile_name + ".save")
 	
+	erase_profile_encripted(profile_name, file_path)
+	
 	var file = File.new()
-	var err = file.open_encrypted_with_pass(file_path, File.WRITE_READ, password)
+	var err = file.open_encrypted_with_pass(file_path, File.WRITE, password)
 	
 	if err == OK:
-		file.get_var()
+		# file.get_var() # TODO
 		file.store_var(data)
+		file.close()
+		
 		return true
 	else:
 		if debug:
@@ -281,6 +325,7 @@ func save_profile_text(profile_name):
 	if err == OK:
 		file.get_line() # Borrar la data anterior
 		file.store_string(to_json(data))
+		file.close()
 		
 		return true
 	else:
@@ -301,6 +346,7 @@ func load_profile_encripted(profile_name):
 	
 	if err == OK:
 		data = file.get_var()
+		file.close()
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.
 		save_profile_encripted(profile_name)
@@ -325,6 +371,7 @@ func load_profile_text(profile_name):
 	
 	if err == OK:
 		data = parse_json(file.get_line())
+		file.close()
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.
 		save_profile_text(profile_name)
@@ -333,6 +380,16 @@ func load_profile_text(profile_name):
 	else:
 		if debug: print("[PersistenceNode] Error al crear/leer el archivo: ", err)
 		return false
+
+func erase_profile_encripted(profile_name, file_path):
+	var file = File.new()
+	var err = file.open_encrypted_with_pass(file_path, File.READ, password)
+	
+	if err == OK:
+		file.get_var()
+		file.close()
+	else:
+		if debug: print("[PersistenceNode] No se a podido limpiar el profile: ", err)
 
 func print_json(json):
 	if beautifier != null:
