@@ -5,6 +5,17 @@
 
 Plugin para almacenar datos de forma persistente en Godot Engine 3 por medio de un nodo llamado Persistence
 
+## Instalar
+1) Descargar el plugin
+2) Descomprimir
+3) Crear una carpeta addons en la raíz de tu proyecto (si es que esta no existe)
+4) Copiar la carpeta "PersistenceNode" (que esta en la carpeta descargada) a dentro de la carpeta addons creada en el paso 3.
+5) Activar el plugin en: Proyecto>Ajustes del proyecto>Plugins
+
+### Opcional
+1) Crear una escena y añadir como nodo raíz Persistence
+2) Agregar esa escena al autoload (Proyecto>Ajustes del proyecto>AutoLoad)
+
 ## Información
 
 Este plugin añade un nodo adicional el cuál puede almacenar información de forma persistente en disco. Ya sea en un archivo .txt en formato json o también en un archivo encriptado con un password con la extención .save.
@@ -19,7 +30,7 @@ También si usted lo prefiere puede añadir este plugin como autoload, para pode
 
 El flujo normal de trabajo con este plugin es primero añadir, el nodo a una escena (puede ser nodo raíz) y luego añadir la escena al autoload. Depués puede utilizar el nodo de la siguiente forma (En el caso que le haya llamado Persistence a la escena):
 
-```
+```GDScript
 # Carga la data por defecto si es que existe data
 Persistence.load_data()
 # Carga la data por defecto y la devuelve
@@ -39,7 +50,7 @@ Persistence.save_data()
 
 En el caso de usar profiles sería muy similar:
 
-```
+```GDScript
 # Carga la data por defecto si es que existe data
 Persistence.load_data("MiProfile")
 # Carga la data por defecto y la devuelve
@@ -59,7 +70,7 @@ Persistence.save_data("MiProfile")
 
 ## Métodos públicos
 
-```
+```GDScript
 # Salva el juego con el profile indicado en el parámetro profile_name. 
 # Si no hay profile crea un profile por defecto llamado default. 
 func save_data(profile_name = null):
