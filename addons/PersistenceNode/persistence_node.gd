@@ -112,7 +112,8 @@ func save_data(profile_name = null):
 func load_data(profile_name = null):
 	var result
 	
-	if profile_name == null and load_profile_default():
+	if profile_name == null:
+		load_profile_default()
 		emit_signal("loaded")
 		return true
 	

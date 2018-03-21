@@ -14,7 +14,7 @@ script = ExtResource( 2 )
 __meta__ = {
 "_editor_icon": ExtResource( 3 )
 }
-mode = 0
+mode = 1
 password = ""
 folder_name = "PersistenceNode"
 no_valid_names = [ "default", "example" ]
