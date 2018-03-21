@@ -40,7 +40,6 @@ export (int) var profile_name_max_size = 15 setget set_profile_name_max_size, ge
 # Data del profile actual, esta data se puede modificar y luego usar
 # save_data()
 var data = {} setget _private, get_data
-var current_profile setget set_current_profile, get_current_profile
 
 # Se hace una excepción para evitar la señal de load
 var load_signal_exception = false setget _private, _private
@@ -175,7 +174,9 @@ func set_mode(_mode):
 
 func get_mode():
 	return mode
-	
+
+# Se obtiene la data, esta data puede ser modificada para luego ser guardada
+# con save_data(). Si esta usando profiles, no olvide indicarle el profile.
 func get_data(profile_name = null):
 	load_signal_exception = true
 	
@@ -208,12 +209,6 @@ func get_profiles():
 # Retorna los nombres no validos
 func get_no_valid_names():
 	return no_valid_names
-
-func set_current_profile(_current_profile):
-	current_profile = _current_profile
-	
-func get_current_profile():
-	return current_profile
 
 func set_password(_password):
 	password = _password

@@ -11,6 +11,12 @@ func _ready():
 
 	var data = $Persistence.get_data("1234")
 	data["algo_nuevo4"] = "nuevo4"
+	
+	data["algo"] = {
+		Datos = "123",
+		Datox = 123
+	}
+	
 	print(data)
 	
 	$Persistence.save_data("1234")
