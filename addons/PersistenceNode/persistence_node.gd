@@ -39,7 +39,7 @@ export (int) var profile_name_max_size = 15 setget set_profile_name_max_size, ge
 
 # Data del profile actual, esta data se puede modificar y luego usar
 # save_data()
-var data = {"test":{"test2":"test3"}} setget _private, get_data
+var data = {} setget _private, get_data
 var current_profile setget set_current_profile, get_current_profile
 
 # Se hace una excepción para evitar la señal de load
@@ -75,9 +75,8 @@ func _on_loaded():
 		if debug: print("[PersistenceNode] _on_loaded()")
 		print_json(to_json(data))
 
-func _private(val = null): 
-    print("Acceso de escritura/lectura es privado")
-    print_stack()
+func _private(val = null):
+	if debug: print("[PersistenceNode] Acceso de escritura/lectura es privado")
 
 # Métodos públicos
 #
