@@ -42,19 +42,38 @@ export (int) var profile_name_max_size = 15
 var data = {"test":{"test2":"test3"}} setget , get_data
 var current_profile setget set_current_profile, get_current_profile
 
+# Se hace una excepción para evitar la señal de load
+var load_signal_exception = false
+
 signal saved
 signal loaded
 
 func _init():
 	if beautifier_active:
 		beautifier = load("res://addons/PersistenceNode/json_beautifier.gd").new()
-	
+
 func _ready():
 	var dir = Directory.new()
 	
 	if not dir.dir_exists(str("user://" + folder_name)):
 		dir.make_dir(str("user://" + folder_name))
 		if debug: print("[PersistenceNode] Se a creado la carpeta ", folder_name)
+
+	connect("saved", self, "_on_saved")
+	connect("loaded", self, "_on_loaded")
+
+func _on_saved():
+	# Muestra los datos en la salida una vez que se graba el archivo.
+	if beautifier_active and mode == MODE_TEXT:
+		if debug: print("[PersistenceNode] _on_saved()")
+		print_json(to_json(data))
+
+func _on_loaded():
+	# Muestra los datos en la salida una vez que se graba el archivo.
+	if beautifier_active and mode == MODE_TEXT and not load_signal_exception:
+		load_signal_exception = false
+		if debug: print("[PersistenceNode] _on_loaded()")
+		print_json(to_json(data))
 
 # Métodos públicos
 #
@@ -64,10 +83,10 @@ func _ready():
 func save_data(profile_name = null):
 	var result
 	
-	if profile_name == null:
-		# Crea el profile por defecto, en el caso de que no se quiera
-		# utilizar profiles.
-		save_profile_default()
+	# Crea el profile por defecto, en el caso de que no se quiera
+	# utilizar profiles.
+	if profile_name == null and save_profile_default():
+		emit_signal("saved")
 		return true # TODO: save_profile_default debe de dar el resultado
 	
 	if validate_profile(profile_name):
@@ -91,8 +110,8 @@ func save_data(profile_name = null):
 func load_data(profile_name = null):
 	var result
 	
-	if profile_name == null:
-		load_profile_default()
+	if profile_name == null and load_profile_default():
+		emit_signal("loaded")
 		return true
 	
 	if validate_profile(profile_name):
@@ -119,7 +138,7 @@ func remove_profile(profile_name):
 	
 	match mode:
 		MODE_ENCRYPTED:
-			path = "user://" + folder_name + "/" + profile_name + ".bin"
+			path = "user://" + folder_name + "/" + profile_name + ".save"
 		MODE_TEXT:
 			path = "user://" + folder_name + "/" + profile_name + ".txt"
 	
@@ -155,6 +174,8 @@ func get_mode():
 	return mode
 	
 func get_data(profile_name = null):
+	load_signal_exception = true
+	
 	if profile_name == null:
 		load_data()
 		return data
@@ -167,7 +188,7 @@ func get_profiles():
 	var dir = Directory.new()
 	var profiles = []
 	
-	if dir.open("user://PersistenceNode/") == OK:
+	if dir.open("user://" + folder_name) == OK:
 		dir.list_dir_begin()
 		var file_name = dir.get_next()
 		
@@ -204,14 +225,17 @@ func validate_profile(profile_name):
 	
 	# 1)
 	if no_valid_names != null and no_valid_names.has(profile_name):
+		if debug: print("[PersistenceNode] Nombre invalido: ", profile_name)
 		return false
 	
 	# 2)
 	if profile_name == "default":
+		if debug: print("[PersistenceNode] No se puede usar el nombre default")
 		return false
 	
 	# 3)
-	if profile_name.length() > profile_name_min_size and profile_name.length() + 1 < profile_name_max_size:
+	if profile_name.length() < profile_name_min_size and profile_name.length() + 1 > profile_name_max_size:
+		if debug: print("[PersistenceNode] El profile_name no esta dentro del rango")
 		return false
 	
 	return true
@@ -219,9 +243,9 @@ func validate_profile(profile_name):
 func save_profile_default():
 	match mode:
 		MODE_ENCRYPTED:
-			save_profile_encripted("default")
+			return save_profile_encripted("default")
 		MODE_TEXT:
-			save_profile_text("default")
+			return save_profile_text("default")
 
 func load_profile_default():
 	match mode:
@@ -232,7 +256,7 @@ func load_profile_default():
 			
 func save_profile_encripted(profile_name):
 	var file_path
-	file_path = str("user://" + folder_name + "/" + profile_name + ".bin")
+	file_path = str("user://" + folder_name + "/" + profile_name + ".save")
 	
 	var file = File.new()
 	var err = file.open_encrypted_with_pass(file_path, File.WRITE_READ, password)
@@ -242,7 +266,9 @@ func save_profile_encripted(profile_name):
 		file.store_var(data)
 		return true
 	else:
-		if debug: print("[PersistenceNode] Error al crear el archivo: ", err)
+		if debug:
+			print("[PersistenceNode] Error al crear/guardar el archivo: ", err)
+			print("[PersistenceNode] Path: ", file_path)
 		return false
 	
 func save_profile_text(profile_name):
@@ -256,10 +282,6 @@ func save_profile_text(profile_name):
 		file.get_line() # Borrar la data anterior
 		file.store_string(to_json(data))
 		
-		if beautifier_active:
-			if debug: print("[PersistenceNode] save_profile_text()")
-			print_json(to_json(data))
-		
 		return true
 	else:
 		if debug: print("[PersistenceNode] Error al crear/leer el archivo: ", err)
@@ -267,7 +289,7 @@ func save_profile_text(profile_name):
 
 func load_profile_encripted(profile_name):
 	var file_path
-	file_path = str("user://" + folder_name + "/" + profile_name + ".bin")
+	file_path = str("user://" + folder_name + "/" + profile_name + ".save")
 	
 	var file = File.new()
 	
@@ -306,11 +328,7 @@ func load_profile_text(profile_name):
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.
 		save_profile_text(profile_name)
-		
-		if beautifier_active:
-			if debug: print("[PersistenceNode] load_profile_text()")
-			print_json(to_json(data))
-		
+
 		return true
 	else:
 		if debug: print("[PersistenceNode] Error al crear/leer el archivo: ", err)
