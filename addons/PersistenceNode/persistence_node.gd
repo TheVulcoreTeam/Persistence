@@ -87,9 +87,14 @@ func save_data(profile_name = null):
 	
 	# Crea el profile por defecto, en el caso de que no se quiera
 	# utilizar profiles.
-	if profile_name == null and save_profile_default():
-		emit_signal("saved")
-		return true # TODO: save_profile_default debe de dar el resultado
+	if profile_name == null:
+		if save_profile_default():
+			emit_signal("saved")
+			if debug: print("[PersistenceNode] save_profile_default() retorna true")
+			return true
+		else:
+			if debug: print("[PersistenceNode] save_profile_default() retorna falso")
+			return false
 	
 	if validate_profile(profile_name):
 		match mode:
@@ -113,11 +118,15 @@ func load_data(profile_name = null):
 	var result
 	
 	if profile_name == null:
-		load_profile_default()
-		emit_signal("loaded")
-		return true
+		if load_profile_default():
+			emit_signal("loaded")
+			print("return true")
+			return true
+		else:
+			if debug: print("[PersistenceNode] load_profile_default retorna false")
+			return false
 	
-	if validate_profile(profile_name):
+	if validate_profile(profile_name): 
 		match mode:
 			MODE_ENCRYPTED:
 				result = load_profile_encripted(profile_name)
@@ -285,9 +294,9 @@ func save_profile_default():
 func load_profile_default():
 	match mode:
 		MODE_ENCRYPTED:
-			load_profile_encripted("default")
+			return load_profile_encripted("default")
 		MODE_TEXT:
-			load_profile_text("default")
+			return load_profile_text("default")
 			
 func save_profile_encripted(profile_name):
 	var file_path
@@ -353,9 +362,7 @@ func load_profile_encripted(profile_name):
 		return false
 	
 func load_profile_text(profile_name):
-	var file_path
-	file_path = str("user://" + folder_name + "/" + profile_name + ".txt")
-	
+	var file_path = str("user://" + folder_name + "/" + profile_name + ".txt")
 	var file = File.new()
 	
 	if not file.file_exists(file_path):
@@ -373,7 +380,7 @@ func load_profile_text(profile_name):
 
 		return true
 	else:
-		if debug: print("[PersistenceNode] Error al crear/leer el archivo: ", err)
+		if debug: print("[PersistenceNode] Error al leer el archivo: ", err)
 		return false
 
 func erase_profile_encripted(profile_name, file_path):

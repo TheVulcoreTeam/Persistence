@@ -11,8 +11,12 @@ config_version=3
 [application]
 
 config/name="PersistenceNode"
-run/main_scene="res://Test.tscn"
+run/main_scene="res://Main.tscn"
 config/icon="res://hardisk_original.png"
+
+[autoload]
+
+Persistence="*res://Persistence.tscn"
 
 [display]
 
