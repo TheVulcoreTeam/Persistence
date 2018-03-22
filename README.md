@@ -133,12 +133,9 @@ func set_profile_name_max_size(_profile_name_max_size):
 func get_profile_name_max_size():
 ```
 
+## Video
 
-
-
-
-
-
+[Curso Godot 3 - Cap 15 - Usar un plugin de persistencia para almacenar datos](https://youtu.be/d9wCyEo3R4A)
 
 
 

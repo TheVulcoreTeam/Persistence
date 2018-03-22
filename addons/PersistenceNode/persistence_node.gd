@@ -52,12 +52,6 @@ func _init():
 		beautifier = load("res://addons/PersistenceNode/json_beautifier.gd").new()
 
 func _ready():
-	var dir = Directory.new()
-	
-	if not dir.dir_exists(str("user://" + folder_name)):
-		dir.make_dir(str("user://" + folder_name))
-		if debug: print("[PersistenceNode] Se a creado la carpeta ", folder_name)
-
 	connect("saved", self, "_on_saved")
 	connect("loaded", self, "_on_loaded")
 
@@ -84,6 +78,9 @@ func _private(val = null):
 # Si no hay profile crea un profile por defecto llamado default. 
 func save_data(profile_name = null):
 	var result
+	
+	# Crea la carpeta principal si esta no existe
+	create_main_folder()
 	
 	# Crea el profile por defecto, en el caso de que no se quiera
 	# utilizar profiles.
@@ -392,6 +389,14 @@ func erase_profile_encripted(profile_name, file_path):
 		file.close()
 	else:
 		if debug: print("[PersistenceNode] No se a podido limpiar el profile: ", err)
+
+# Crea la carpeta principal, sólo la crea si esta no existe
+func create_main_folder():
+	var dir = Directory.new()
+	
+	if not dir.dir_exists(str("user://" + folder_name)):
+		dir.make_dir(str("user://" + folder_name))
+		if debug: print("[PersistenceNode] Se a creado la carpeta ", folder_name)
 
 func print_json(json):
 	if beautifier != null:
