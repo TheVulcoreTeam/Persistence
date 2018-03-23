@@ -102,8 +102,9 @@ func get_mode():
 # con save_data(). Si esta usando profiles, no olvide indicarle el profile.
 func get_data(profile_name = null):
 
-# Retorna los perfiles existentes
-func get_profiles():
+# Retorna los perfiles existentes, por defecto los devuelve sin
+# extension.
+func get_profiles(with_extension = false):
 
 # Retorna los nombres no validos
 func get_no_valid_names():

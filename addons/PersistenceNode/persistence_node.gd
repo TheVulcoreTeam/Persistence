@@ -155,21 +155,32 @@ func remove_profile(profile_name):
 	
 	if err != OK:
 		if debug: print("[PersistenceNode] Error al remover el profile: ", err)
+		return false
+	
+	return true
 
 # Remueve toda la data dentro de la carpeta "folder_name" sin importar
-# si esta encriptada o no.
+# si esta encriptada o no. Devuelve true si la remueve y false si no
+# existe data o hay un error.
 func remove_all_data():
 	var dir = Directory.new()
-	var profiles = get_profiles()
+	var profiles = get_profiles(true)
 	
 	if profiles != null:
 		var path = "user://" + folder_name + "/"
+		var err
 		
 		for i in range(profiles.size()):
-			dir.remove(str(path + profiles[i]))
+			err = dir.remove(str(path + profiles[i]))
+			
+			if err != OK:
+				if debug: print("[PersistenceNode] Un error al elimnar el archivo: ", err)
+				return false
+		
+		return true
 	else:
 		if debug: print("[PersistenceNode] No se a removido ningún archivo.")
-	
+		return false
 
 # Setters/Getters
 #
@@ -195,7 +206,7 @@ func get_data(profile_name = null):
 		return data
 
 # Retorna los perfiles existentes
-func get_profiles():
+func get_profiles(with_extension = false):
 	var dir = Directory.new()
 	var profiles = []
 	
@@ -205,12 +216,15 @@ func get_profiles():
 		
 		while (file_name != ""):
 			if file_name != "." and file_name != "..":
-				profiles.append(file_name)
+				if not with_extension:
+					profiles.append(file_name.get_basename())
+				else:
+					profiles.append(file_name)
 		
 			file_name = dir.get_next()
 	else:
 		if debug: print("[PersistenceNode] Un error ha ocurrido al intentar entrar al path.")
-
+	
 	return profiles
 
 # Retorna los nombres no validos
