@@ -205,7 +205,8 @@ func get_data(profile_name = null):
 		load_data(profile_name)
 		return data
 
-# Retorna los perfiles existentes
+# Retorna los perfiles existentes, por defecto los devuelve sin
+# extension.
 func get_profiles(with_extension = false):
 	var dir = Directory.new()
 	var profiles = []
@@ -289,7 +290,7 @@ func validate_profile(profile_name):
 		return false
 	
 	# 3)
-	if profile_name.length() < profile_name_min_size and profile_name.length() + 1 > profile_name_max_size:
+	if profile_name.length() < profile_name_min_size or profile_name.length() > profile_name_max_size:
 		if debug: print("[PersistenceNode] El profile_name no esta dentro del rango")
 		return false
 	
