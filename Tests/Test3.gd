@@ -8,8 +8,6 @@ func _ready():
 	Persistence.set_folder_name("PersistenceNode")
 	print("get_mode(): ", Persistence.get_mode())
 	
-	Persistence.load_data()
-	
 	var data = Persistence.get_data()
 	print("get_data(): ", data)
 	

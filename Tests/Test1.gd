@@ -4,7 +4,6 @@ func _ready():
 	# Test: MODE_TEXT | Default.txt
 	#
 	Persistence.set_mode(Persistence.MODE_TEXT)
-	Persistence.load_data()
 	
 	var data = Persistence.get_data()
 	

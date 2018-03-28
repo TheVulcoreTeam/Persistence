@@ -41,9 +41,6 @@ export (int) var profile_name_max_size = 15 setget set_profile_name_max_size, ge
 # save_data()
 var data = {} setget _private, get_data
 
-# Se hace una excepción para evitar la señal de load
-var load_signal_exception = false setget _private, _private
-
 signal saved
 signal loaded
 
@@ -58,21 +55,24 @@ func _ready():
 func _on_saved():
 	# Muestra los datos en la salida una vez que se graba el archivo.
 	if beautifier_active and mode == MODE_TEXT:
-		if debug: print("[PersistenceNode] _on_saved()")
+		debug("_on_saved()")
 		print_json(to_json(data))
 
 func _on_loaded():
 	# Muestra los datos en la salida una vez que se graba el archivo.
-	if beautifier_active and mode == MODE_TEXT and not load_signal_exception:
-		load_signal_exception = false
-		if debug: print("[PersistenceNode] _on_loaded()")
+	if beautifier_active and mode == MODE_TEXT:
+		debug("_on_loaded()")
 		print_json(to_json(data))
 
 func _private(val = null):
-	if debug: print("[PersistenceNode] Acceso de escritura/lectura es privado")
+	debug("Acceso de escritura/lectura es privado")
 
 # Métodos públicos
 #
+
+func debug(message, something1 = "", something2 = ""):
+	if debug:
+		print("[PersistenceNode] ", message, " ", something1, " ", something2)
 
 # Salva el juego con el profile indicado en el parámetro profile_name. 
 # Si no hay profile crea un profile por defecto llamado default. 
@@ -87,10 +87,10 @@ func save_data(profile_name = null):
 	if profile_name == null:
 		if save_profile_default():
 			emit_signal("saved")
-			if debug: print("[PersistenceNode] save_profile_default() retorna true")
+			debug("save_profile_default() retorna true")
 			return true
 		else:
-			if debug: print("[PersistenceNode] save_profile_default() retorna falso")
+			debug("save_profile_default() retorna falso")
 			return false
 	
 	if validate_profile(profile_name):
@@ -100,41 +100,11 @@ func save_data(profile_name = null):
 			MODE_TEXT:
 				result = save_profile_text(profile_name)
 	else:
-		if debug: print("[PersistenceNode] No ha pasado la validación")
+		debug("No ha pasado la validación")
 		result = false
 	
 	if result:
 		emit_signal("saved")
-	
-	return result
-
-# Carga la data, si no se le pasa ningún argumento entonces carga la data
-# por defecto, si se le pasa argumento entonces carga la data indicada en el.
-# Devuelve true si se carga exitosamente y false si no lo hace.
-func load_data(profile_name = null):
-	var result
-	
-	if profile_name == null:
-		if load_profile_default():
-			emit_signal("loaded")
-			print("return true")
-			return true
-		else:
-			if debug: print("[PersistenceNode] load_profile_default retorna false")
-			return false
-	
-	if validate_profile(profile_name): 
-		match mode:
-			MODE_ENCRYPTED:
-				result = load_profile_encripted(profile_name)
-			MODE_TEXT:
-				result = load_profile_text(profile_name)
-	else:
-		if debug: print("[PersistenceNode] No ha pasado la validación")
-		result = false
-	
-	if result:
-		emit_signal("loaded")
 	
 	return result
 
@@ -154,7 +124,7 @@ func remove_profile(profile_name):
 	var err = dir.remove(path)
 	
 	if err != OK:
-		if debug: print("[PersistenceNode] Error al remover el profile: ", err)
+		debug("Error al remover el profile: ", err)
 		return false
 	
 	return true
@@ -174,12 +144,12 @@ func remove_all_data():
 			err = dir.remove(str(path + profiles[i]))
 			
 			if err != OK:
-				if debug: print("[PersistenceNode] Un error al elimnar el archivo: ", err)
+				debug("Un error al elimnar el archivo: ", err)
 				return false
 		
 		return true
 	else:
-		if debug: print("[PersistenceNode] No se a removido ningún archivo.")
+		debug("No se a removido ningún archivo.")
 		return false
 
 # Setters/Getters
@@ -196,14 +166,8 @@ func get_mode():
 # Se obtiene la data, esta data puede ser modificada para luego ser guardada
 # con save_data(). Si esta usando profiles, no olvide indicarle el profile.
 func get_data(profile_name = null):
-	load_signal_exception = true
-	
-	if profile_name == null:
-		load_data()
-		return data
-	else:
-		load_data(profile_name)
-		return data
+	load_data(profile_name)
+	return data
 
 # Retorna los perfiles existentes, por defecto los devuelve sin
 # extension.
@@ -224,7 +188,7 @@ func get_profiles(with_extension = false):
 		
 			file_name = dir.get_next()
 	else:
-		if debug: print("[PersistenceNode] Un error ha ocurrido al intentar entrar al path.")
+		debug("Un error ha ocurrido al intentar entrar al path.")
 	
 	return profiles
 
@@ -281,17 +245,17 @@ func validate_profile(profile_name):
 	
 	# 1)
 	if no_valid_names != null and no_valid_names.has(profile_name):
-		if debug: print("[PersistenceNode] Nombre invalido: ", profile_name)
+		debug("Nombre invalido: ", profile_name)
 		return false
 	
 	# 2)
 	if profile_name == "default":
-		if debug: print("[PersistenceNode] No se puede usar el nombre default")
+		debug("No se puede usar el nombre default")
 		return false
 	
 	# 3)
 	if profile_name.length() < profile_name_min_size or profile_name.length() > profile_name_max_size:
-		if debug: print("[PersistenceNode] El profile_name no esta dentro del rango")
+		debug("El profile_name no esta dentro del rango")
 		return false
 	
 	return true
@@ -320,15 +284,13 @@ func save_profile_encripted(profile_name):
 	var err = file.open_encrypted_with_pass(file_path, File.WRITE, password)
 	
 	if err == OK:
-		# file.get_var() # TODO
 		file.store_var(data)
 		file.close()
 		
 		return true
 	else:
-		if debug:
-			print("[PersistenceNode] Error al crear/guardar el archivo: ", err)
-			print("[PersistenceNode] Path: ", file_path)
+		debug("Error al crear/guardar el archivo: ", err)
+		debug("Path: ", file_path)
 		return false
 	
 func save_profile_text(profile_name):
@@ -345,7 +307,7 @@ func save_profile_text(profile_name):
 		
 		return true
 	else:
-		if debug: print("[PersistenceNode] Error al crear/leer el archivo: ", err)
+		debug("Error al crear/leer el archivo: ", err)
 		return false
 
 func load_profile_encripted(profile_name):
@@ -355,7 +317,7 @@ func load_profile_encripted(profile_name):
 	var file = File.new()
 	
 	if not file.file_exists(file_path):
-		if debug: print("[PersistenceNode] El archivo no existe: " + file_path)
+		debug("El archivo no existe: " + file_path)
 		return false
 	
 	var err = file.open_encrypted_with_pass(file_path, File.READ, password)
@@ -367,10 +329,10 @@ func load_profile_encripted(profile_name):
 		# se borran los datos en disco.
 		save_profile_encripted(profile_name)
 		
-		if debug: print("[PersistenceNode] Se a cargado el archivo con éxito: ")
+		debug("Se a cargado el archivo con éxito: ")
 		return true
 	else:
-		if debug: print("[PersistenceNode] Error al leer el archivo: ", err)
+		debug("Error al leer el archivo: ", err)
 		return false
 	
 func load_profile_text(profile_name):
@@ -378,7 +340,7 @@ func load_profile_text(profile_name):
 	var file = File.new()
 	
 	if not file.file_exists(file_path):
-		if debug: print("[PersistenceNode] El archivo no existe: " + file_path)
+		debug("El archivo no existe: " + file_path)
 		return false
 	
 	var err = file.open(file_path, File.READ)
@@ -392,7 +354,7 @@ func load_profile_text(profile_name):
 
 		return true
 	else:
-		if debug: print("[PersistenceNode] Error al leer el archivo: ", err)
+		debug("Error al leer el archivo: ", err)
 		return false
 
 func erase_profile_encripted(profile_name, file_path):
@@ -403,7 +365,7 @@ func erase_profile_encripted(profile_name, file_path):
 		file.get_var()
 		file.close()
 	else:
-		if debug: print("[PersistenceNode] No se a podido limpiar el profile: ", err)
+		debug("No se a podido limpiar el profile: ", err)
 
 # Crea la carpeta principal, sólo la crea si esta no existe
 func create_main_folder():
@@ -411,7 +373,37 @@ func create_main_folder():
 	
 	if not dir.dir_exists(str("user://" + folder_name)):
 		dir.make_dir(str("user://" + folder_name))
-		if debug: print("[PersistenceNode] Se a creado la carpeta ", folder_name)
+		debug("Se a creado la carpeta ", folder_name)
+
+# Carga la data, si no se le pasa ningún argumento entonces carga la data
+# por defecto, si se le pasa argumento entonces carga la data indicada en el.
+# Devuelve true si se carga exitosamente y false si no lo hace.
+func load_data(profile_name = null):
+	var result
+	
+	if profile_name == null:
+		if load_profile_default():
+			emit_signal("loaded")
+			print("return true")
+			return true
+		else:
+			debug("load_profile_default retorna false.")
+			return false
+	
+	if validate_profile(profile_name): 
+		match mode:
+			MODE_ENCRYPTED:
+				result = load_profile_encripted(profile_name)
+			MODE_TEXT:
+				result = load_profile_text(profile_name)
+	else:
+		debug("No ha pasado la validación")
+		result = false
+	
+	if result:
+		emit_signal("loaded")
+	
+	return result
 
 func print_json(json):
 	if beautifier != null:

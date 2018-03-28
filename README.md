@@ -1,4 +1,3 @@
-
 # [Spanish]
 
 # PersistenceNode
@@ -16,6 +15,10 @@ Plugin para almacenar datos de forma persistente en Godot Engine 3 por medio de 
 1) Crear una escena y añadir como nodo raíz Persistence
 2) Agregar esa escena al autoload (Proyecto>Ajustes del proyecto>AutoLoad)
 
+### Por medio del editor
+1) Solo seleccione la carpeta addons para descargar
+2) Activar el plugin en: Proyecto>Ajustes del proyecto>Plugins
+
 ## Información
 
 Este plugin añade un nodo adicional el cuál puede almacenar información de forma persistente en disco. Ya sea en un archivo .txt en formato json o también en un archivo encriptado con un password con la extención .save.
@@ -31,8 +34,6 @@ También si usted lo prefiere puede añadir este plugin como autoload, para pode
 El flujo normal de trabajo con este plugin es primero añadir, el nodo a una escena (puede ser nodo raíz) y luego añadir la escena al autoload. Depués puede utilizar el nodo de la siguiente forma (En el caso que le haya llamado Persistence a la escena):
 
 ```GDScript
-# Carga la data por defecto si es que existe data
-Persistence.load_data()
 # Carga la data por defecto y la devuelve
 var data = Persistence.get_data() 
 
@@ -51,8 +52,6 @@ Persistence.save_data()
 En el caso de usar profiles sería muy similar:
 
 ```GDScript
-# Carga la data por defecto si es que existe data
-Persistence.load_data("MiProfile")
 # Carga la data por defecto y la devuelve
 var data = Persistence.get_data("MiProfile") 
 
@@ -74,11 +73,6 @@ Persistence.save_data("MiProfile")
 # Salva el juego con el profile indicado en el parámetro profile_name. 
 # Si no hay profile crea un profile por defecto llamado default. 
 func save_data(profile_name = null):
-
-# Carga la data, si no se le pasa ningún argumento entonces carga la data
-# por defecto, si se le pasa argumento entonces carga la data indicada en el.
-# Devuelve true si se carga exitosamente y false si no lo hace.
-func load_data(profile_name = null):
 
 # Remueve el profile indicado como argumento. Tome en cuenta que para
 # eliminar el encriptado o el texto, debe establecer primero el modo

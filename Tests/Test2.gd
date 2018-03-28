@@ -7,8 +7,6 @@ func _ready():
 	Persistence.set_mode(Persistence.MODE_TEXT)
 	Persistence.set_folder_name("NuevaCarpeta")
 	
-	Persistence.load_data("Alguien")
-	
 	var data = Persistence.get_data("Alguien")
 	
 	data["Diccionario"] = {
