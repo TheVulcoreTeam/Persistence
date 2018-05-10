@@ -30,6 +30,7 @@ export (String) var folder_name = "PersistenceNode" setget set_folder_name, get_
 export (Array) var no_valid_names = ["default", "example"] setget _private, get_no_valid_names
 export (bool) var debug = false setget set_debug, get_debug
 
+# 1.0.5
 # Source: https://github.com/YeldhamDev/json-beautifier-for-godot
 var beautifier setget _private, _private
 export (bool) var beautifier_active = true setget set_beautifier_active, get_beautifier_active
@@ -46,7 +47,7 @@ signal loaded
 
 func _init():
 	if beautifier_active:
-		beautifier = load("res://addons/PersistenceNode/json_beautifier.gd").new()
+		beautifier = load("res://addons/json_beautifier/json_beautifier.gd").new()
 
 func _ready():
 	connect("saved", self, "_on_saved")
@@ -117,15 +118,17 @@ func remove_profile(profile_name):
 	
 	match mode:
 		MODE_ENCRYPTED:
-			path = "user://" + folder_name + "/" + profile_name + ".save"
+			path = str("user://", folder_name, "/", profile_name, ".save")
 		MODE_TEXT:
-			path = "user://" + folder_name + "/" + profile_name + ".txt"
+			path = str("user://", folder_name, "/", profile_name, ".txt")
 	
 	var err = dir.remove(path)
 	
 	if err != OK:
 		debug("Error al remover el profile: ", err)
 		return false
+	else:
+		data = {}
 	
 	return true
 
@@ -146,6 +149,8 @@ func remove_all_data():
 			if err != OK:
 				debug("Un error al elimnar el archivo: ", err)
 				return false
+		
+		data = {}
 		
 		return true
 	else:
@@ -384,7 +389,6 @@ func load_data(profile_name = null):
 	if profile_name == null:
 		if load_profile_default():
 			emit_signal("loaded")
-			print("return true")
 			return true
 		else:
 			debug("load_profile_default retorna false.")
@@ -407,7 +411,7 @@ func load_data(profile_name = null):
 
 func print_json(json):
 	if beautifier != null:
-		print("__________- JSON -__________")
+		print("______________- JSON -______________")
 		print(beautifier.beautify_json(json))
-		print("____________________________")
+		print("____________________________________")
 	
