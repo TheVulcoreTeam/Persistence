@@ -1,3 +1,5 @@
+![Persistence](https://github.com/MatiasVME/Persistence/blob/master/hardisk_original.png)
+
 # [English] (power by www.deepl.com/translator)
 
 # PersistenceNode
