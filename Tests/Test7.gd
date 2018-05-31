@@ -1,7 +1,7 @@
 extends Node
 
 func _ready():
-	# Test: MODE_TEXT | validacion
+	# Test: MODE_TEXT | remove profiles
 	#
 	
 	Persistence.set_folder_name("PersistenceNode")

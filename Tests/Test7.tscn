@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Tests/Test7.gd" type="Script" id=1]
 
-[node name="Test7" type="Node" index="0"]
+[node name="Test7" type="Node"]
 
 script = ExtResource( 1 )
 

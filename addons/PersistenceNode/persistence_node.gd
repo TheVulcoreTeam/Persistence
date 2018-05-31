@@ -171,7 +171,10 @@ func get_mode():
 # Se obtiene la data, esta data puede ser modificada para luego ser guardada
 # con save_data(). Si esta usando profiles, no olvide indicarle el profile.
 func get_data(profile_name = null):
+	data = {}
+	
 	load_data(profile_name)
+	
 	return data
 
 # Retorna los perfiles existentes, por defecto los devuelve sin
@@ -411,7 +414,7 @@ func load_data(profile_name = null):
 
 func print_json(json):
 	if beautifier != null:
-		print("______________- JSON -______________")
+		print("________________________- JSON -________________________")
 		print(beautifier.beautify_json(json))
-		print("____________________________________")
+		print("________________________________________________________")
 	
