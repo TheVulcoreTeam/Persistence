@@ -1,11 +1,11 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://addons/PersistenceNode/persistence_node.gd" type="Script" id=1]
 [ext_resource path="res://addons/PersistenceNode/icon.png" type="Texture" id=2]
 
 [node name="Persistence" type="Node"]
 
-script = ExtResource( 1 )
+script/script = ExtResource( 1 )
 __meta__ = {
 "_editor_icon": ExtResource( 2 )
 }
@@ -13,7 +13,7 @@ mode = null
 password = ""
 folder_name = "PersistenceNode"
 no_valid_names = [ "default", "example" ]
-debug = true
+debug = false
 beautifier_active = true
 profile_name_min_size = 3
 profile_name_max_size = 15

@@ -13,9 +13,10 @@ extends Node
 # 'validade_json' method) and a number of spaces for indentation (default is
 # '0', in which it will use tabs instead).
 static func beautify_json(json, spaces = 0):
-	var error_message = validate_json(json)
-	if not error_message.empty():
-		return error_message
+# TODO: Convert that to Godot 2
+#	var error_message = validate_json(json)
+#	if not error_message.empty():
+#		return error_message
 	
 	var indentation = ""
 	if spaces > 0:
@@ -41,25 +42,23 @@ static func beautify_json(json, spaces = 0):
 			
 			continue
 		
-		match i:
-			# Remove pre-existing formating.
-			" ", "\n", "\t":
-				json[char_position] = ""
-				char_position -= 1
+		if i == " " or i == "\n" or i == "\t":
+			json[char_position] = ""
+			char_position -= 1
 			
-			"{", "[", ",":
-				if json[char_position + 1] != "}" and\
-						json[char_position + 1] != "]":
-					json = json.insert(char_position + 1, "\n")
-					char_position += 1
-			"}", "]":
-				if json[char_position - 1] != "{" and\
-						json[char_position - 1] != "[":
-					json = json.insert(char_position, "\n")
-					char_position += 1
-			":":
-				json = json.insert(char_position + 1, " ")
+		elif i == "{" or i == "[" or i == ",":
+			if json[char_position + 1] != "}" and\
+					json[char_position + 1] != "]":
+				json = json.insert(char_position + 1, "\n")
 				char_position += 1
+		elif i == "}" or i == "]":
+			if json[char_position - 1] != "{" and\
+					json[char_position - 1] != "[":
+				json = json.insert(char_position, "\n")
+				char_position += 1
+		elif i == ":":
+			json = json.insert(char_position + 1, " ")
+			char_position += 1
 		
 		char_position += 1
 	

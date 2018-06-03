@@ -24,7 +24,7 @@ tool
 extends Node
 
 enum Mode {MODE_ENCRYPTED, MODE_TEXT}
-export (Mode) var mode = MODE_ENCRYPTED setget set_mode, get_mode
+export (int) var mode = MODE_ENCRYPTED setget set_mode, get_mode
 export (String) var password = "" setget set_password, get_password
 export (String) var folder_name = "PersistenceNode" setget set_folder_name, get_folder_name
 export (Array) var no_valid_names = ["default", "example"] setget _private, get_no_valid_names
@@ -57,13 +57,13 @@ func _on_saved():
 	# Muestra los datos en la salida una vez que se graba el archivo.
 	if beautifier_active and mode == MODE_TEXT:
 		debug("_on_saved()")
-		print_json(to_json(data))
+		print_json(data.to_json())
 
 func _on_loaded():
 	# Muestra los datos en la salida una vez que se graba el archivo.
 	if beautifier_active and mode == MODE_TEXT:
 		debug("_on_loaded()")
-		print_json(to_json(data))
+		print_json(data.to_json())
 
 func _private(val = null):
 	debug("Acceso de escritura/lectura es privado")
@@ -95,11 +95,10 @@ func save_data(profile_name = null):
 			return false
 	
 	if validate_profile(profile_name):
-		match mode:
-			MODE_ENCRYPTED:
-				result = save_profile_encripted(profile_name)
-			MODE_TEXT:
-				result = save_profile_text(profile_name)
+		if mode == MODE_ENCRYPTED:
+			result = save_profile_encripted(profile_name)
+		elif mode == MODE_TEXT:
+			result = save_profile_text(profile_name)
 	else:
 		debug("No ha pasado la validación")
 		result = false
@@ -116,11 +115,10 @@ func remove_profile(profile_name):
 	var dir = Directory.new()
 	var path
 	
-	match mode:
-		MODE_ENCRYPTED:
-			path = str("user://", folder_name, "/", profile_name, ".save")
-		MODE_TEXT:
-			path = str("user://", folder_name, "/", profile_name, ".txt")
+	if mode == MODE_ENCRYPTED:
+		path = str("user://", folder_name, "/", profile_name, ".save")
+	elif mode == MODE_TEXT:
+		path = str("user://", folder_name, "/", profile_name, ".txt")
 	
 	var err = dir.remove(path)
 	
@@ -269,19 +267,17 @@ func validate_profile(profile_name):
 	return true
 	
 func save_profile_default():
-	match mode:
-		MODE_ENCRYPTED:
-			return save_profile_encripted("default")
-		MODE_TEXT:
-			return save_profile_text("default")
+	if mode == MODE_ENCRYPTED:
+		return save_profile_encripted("default")
+	elif mode == MODE_TEXT:
+		return save_profile_text("default")
 
 func load_profile_default():
-	match mode:
-		MODE_ENCRYPTED:
-			return load_profile_encripted("default")
-		MODE_TEXT:
-			return load_profile_text("default")
-			
+	if mode == MODE_ENCRYPTED:
+		return load_profile_encripted("default")
+	elif mode == MODE_TEXT:
+		return load_profile_text("default")
+	
 func save_profile_encripted(profile_name):
 	var file_path
 	file_path = str("user://" + folder_name + "/" + profile_name + ".save")
@@ -310,7 +306,7 @@ func save_profile_text(profile_name):
 	
 	if err == OK:
 		file.get_line() # Borrar la data anterior
-		file.store_string(to_json(data))
+		file.store_string(data.to_json())
 		file.close()
 		
 		return true
@@ -354,7 +350,7 @@ func load_profile_text(profile_name):
 	var err = file.open(file_path, File.READ)
 	
 	if err == OK:
-		data = parse_json(file.get_line())
+		data.parse_json(file.get_line())
 		file.close()
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.
@@ -398,11 +394,10 @@ func load_data(profile_name = null):
 			return false
 	
 	if validate_profile(profile_name): 
-		match mode:
-			MODE_ENCRYPTED:
-				result = load_profile_encripted(profile_name)
-			MODE_TEXT:
-				result = load_profile_text(profile_name)
+		if mode == MODE_ENCRYPTED:
+			result = load_profile_encripted(profile_name)
+		elif mode == MODE_TEXT:
+			result = load_profile_text(profile_name)
 	else:
 		debug("No ha pasado la validación")
 		result = false
