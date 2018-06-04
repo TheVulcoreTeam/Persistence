@@ -1,8 +1,8 @@
 # [English] (power by www.deepl.com/translator)
 
-# PersistenceNode
+# PersistenceNode (for Godot 2.1.4 version)
 
-Plugin to persistently store data in Godot Engine 3 through a node called Persistence
+Plugin to persistently store data in Godot Engine 2.1.4 through a node called Persistence
 
 ## Install
 1) Download the plugin
@@ -148,7 +148,7 @@ func get_profile_name_max_size():
 
 # PersistenceNode
 
-Plugin para almacenar datos de forma persistente en Godot Engine 3 por medio de un nodo llamado Persistence
+Plugin para almacenar datos de forma persistente en Godot Engine 2.1.4 por medio de un nodo llamado Persistence
 
 ## Instalar
 1) Descargar el plugin
