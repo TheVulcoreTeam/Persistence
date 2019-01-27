@@ -2,12 +2,12 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/hardisk_original.png-147d48039ac8db0c45a40751c261e815.stex"
+path="res://.import/icon.svg-c3fc56b0132e9203f1b797a09c2dc0d5.stex"
 
 [deps]
 
-source_file="res://hardisk_original.png"
-dest_files=[ "res://.import/hardisk_original.png-147d48039ac8db0c45a40751c261e815.stex" ]
+source_file="res://addons/PersistenceNode/icon.svg"
+dest_files=[ "res://.import/icon.svg-c3fc56b0132e9203f1b797a09c2dc0d5.stex" ]
 
 [params]
 

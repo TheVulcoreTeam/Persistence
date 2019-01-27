@@ -6,7 +6,23 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=3
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "JSONBeautifier",
+"language": "GDScript",
+"path": "res://addons/json_beautifier/json_beautifier.gd"
+}, {
+"base": "Node",
+"class": "Persistence",
+"language": "GDScript",
+"path": "res://addons/PersistenceNode/persistence_node.gd"
+} ]
+_global_script_class_icons={
+"JSONBeautifier": "",
+"Persistence": "res://addons/PersistenceNode/icon.png"
+}
 
 [application]
 
