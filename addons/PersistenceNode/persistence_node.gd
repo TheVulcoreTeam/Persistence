@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018 Matías Muñoz Espinoza
+# Copyright (c) 2018-2019 Matías Muñoz Espinoza
 # Copyright (c) 2019 Ren Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy

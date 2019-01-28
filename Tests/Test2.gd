@@ -4,7 +4,7 @@ func _ready():
 	# Test: MODE_TEXT | Alguien.txt | Other Folder
 	#
 	
-	Persistence.set_mode(Persistence.MODE_TEXT)
+	Persistence.mode = Persistence.MODE_TEXT
 	Persistence.set_folder_name("NuevaCarpeta")
 	
 	var data = Persistence.get_data("Alguien")
