@@ -4,20 +4,23 @@ func _ready():
 	# Test: MODE_ENCRYPTED and MODE_TEXT | get_profiles
 	#
 	
-	Persistence.set_folder_name("PersistenceNode")
+	$Persistence.set_folder_name("PersistenceNode")
 	
-	Persistence.set_mode(Persistence.MODE_ENCRYPTED)
-	print("get_mode(): ", Persistence.get_mode())
+	$Persistence.mode = $Persistence.Mode.ENCRYPTED
+	print("get_mode(): ", $Persistence.get_mode())
 	
-	Persistence.save_data("x1")
-	Persistence.save_data("x2")
-	Persistence.save_data("x3")
+	var xx1 = $Persistence.get_data("xx1")
+	$Persistence.save_data("xx1")
+	var xx2 = $Persistence.get_data("xx2")
+	$Persistence.save_data("xx2")
+	var xx3 = $Persistence.get_data("xx3")
+	$Persistence.save_data("xx3")
 	
-	Persistence.set_mode(Persistence.MODE_TEXT)
-	print("get_mode(): ", Persistence.get_mode())
+	$Persistence.mode = $Persistence.Mode.TEXT
+	print("get_mode(): ", $Persistence.get_mode())
 	
-	Persistence.save_data("y1")
-	Persistence.save_data("y2")
-	Persistence.save_data("y3")
+	$Persistence.save_data("yy1")
+	$Persistence.save_data("yy2")
+	$Persistence.save_data("yy3")
 	
-	print("Profiles: ", Persistence.get_profiles())
+	print("Profiles: ", $Persistence.get_profiles())

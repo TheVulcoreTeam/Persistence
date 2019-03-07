@@ -8,4 +8,5 @@ script = ExtResource( 1 )
 
 [node name="Persistence" type="Node" parent="."]
 script = ExtResource( 2 )
+debug_on = true
 

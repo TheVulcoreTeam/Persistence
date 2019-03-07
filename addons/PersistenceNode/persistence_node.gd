@@ -21,7 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-tool
 extends Node
 class_name Persistence, "icon.png"
 
@@ -176,6 +175,7 @@ func get_mode() -> int:
 func get_data(profile_name : String = "") -> Dictionary:
 	data = {}
 	load_data(profile_name)
+	
 	return data
 
 # Retorna los perfiles existentes, por defecto los devuelve sin
@@ -394,7 +394,7 @@ func create_main_folder() -> void:
 func load_data(profile_name : String = "") -> bool:
 	var result
 	
-	if profile_name == null:
+	if profile_name == "":
 		if load_profile_default():
 			emit_signal("loaded")
 			return true
