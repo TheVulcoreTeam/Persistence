@@ -1,6 +1,6 @@
 # MIT License
 #
-# Copyright (c) 2018-2019 Matías Muñoz Espinoza
+# Copyright (c) 2018-2020 Matías Muñoz Espinoza
 # Copyright (c) 2019 Ren Project
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,24 +22,25 @@
 # SOFTWARE.
 
 extends Node
+
 class_name Persistence, "icon.png"
 
 enum Mode {ENCRYPTED, TEXT}
 export (Mode) var mode : int = Mode.ENCRYPTED setget set_mode, get_mode
-export (String) var password : String = "" setget set_password, get_password
-export (String) var folder_name : String = "PersistenceNode" setget set_folder_name, get_folder_name
-export (Array) var no_valid_names : Array = ["default", "example"] setget _private_set, get_no_valid_names
-export (bool) var debug_on : bool = false setget set_debug, get_debug
+export (String) var password := "" setget set_password, get_password
+export (String) var folder_name := "PersistenceNode" setget set_folder_name, get_folder_name
+export (Array) var no_valid_names := ["default", "example"] setget _private_set, get_no_valid_names
+export (bool) var debug_on := false setget set_debug, get_debug
 
 var beautifier setget _private_set, _private_get
-export (bool) var beautifier_active : bool = true setget set_beautifier_active, get_beautifier_active
+export (bool) var beautifier_active := true setget set_beautifier_active, get_beautifier_active
 
-export (int) var profile_name_min_size : int = 3 setget set_profile_name_min_size, get_profile_name_min_size
-export (int) var profile_name_max_size : int = 15 setget set_profile_name_max_size, get_profile_name_max_size
+export (int) var profile_name_min_size := 3 setget set_profile_name_min_size, get_profile_name_min_size
+export (int) var profile_name_max_size := 15 setget set_profile_name_max_size, get_profile_name_max_size
 
 # Data del profile actual, esta data se puede modificar y luego usar
 # save_data()
-var data : Dictionary = {} setget _private_set
+var data := {} setget _private_set
 
 signal saved
 signal loaded
@@ -175,7 +176,6 @@ func get_mode() -> int:
 func get_data(profile_name : String = "") -> Dictionary:
 	data = {}
 	load_data(profile_name)
-	
 	return data
 
 # Retorna los perfiles existentes, por defecto los devuelve sin
@@ -315,7 +315,7 @@ func save_profile_text(profile_name : String) -> bool:
 	
 	if err == OK:
 		file.get_line() # Borrar la data anterior
-		file.store_string(to_json(data))
+		file.store_string(beautifier.beautify_json(to_json(data)))
 		file.close()
 		
 		return true
@@ -359,7 +359,14 @@ func load_profile_text(profile_name : String) -> bool:
 	var err = file.open(file_path, File.READ)
 	
 	if err == OK:
-		data = parse_json(file.get_line())
+		var data_str := ""
+		
+		# Mientras no alcance el final de linea
+		while not file.eof_reached():
+			# Se va concatenando el texto del json
+			data_str = data_str + file.get_line()
+		data = parse_json(data_str)
+		
 		file.close()
 		# Se guarda la data después de cargarla ya que, al cargar la data
 		# se borran los datos en disco.

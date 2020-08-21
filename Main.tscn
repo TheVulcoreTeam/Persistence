@@ -23,4 +23,3 @@
 [node name="Test6" parent="." instance=ExtResource( 6 )]
 
 [node name="Test8" parent="." instance=ExtResource( 7 )]
-
