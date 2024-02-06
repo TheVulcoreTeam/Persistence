@@ -3,7 +3,7 @@
 # Persistence Node
 #
 # Copyright (c) 2018-2024 Matías Muñoz Espinoza
-# Copyright (c) 2019 Ren Project
+# Copyright (c) 2019 Jeremi Biernacki
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
