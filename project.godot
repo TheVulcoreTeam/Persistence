@@ -6,39 +6,24 @@
 ;   [section] ; section goes between []
 ;   param=value ; assign values to parameters
 
-config_version=4
-
-_global_script_classes=[ {
-"base": "Node",
-"class": "JSONBeautifier",
-"language": "GDScript",
-"path": "res://addons/json_beautifier/json_beautifier.gd"
-}, {
-"base": "Node",
-"class": "Persistence",
-"language": "GDScript",
-"path": "res://addons/PersistenceNode/persistence_node.gd"
-} ]
-_global_script_class_icons={
-"JSONBeautifier": "",
-"Persistence": "res://addons/PersistenceNode/icon.png"
-}
+config_version=5
 
 [application]
 
 config/name="PersistenceNode"
-run/main_scene="res://Main.tscn"
+run/main_scene="res://main.tscn"
+config/features=PackedStringArray("4.2")
 config/icon="res://hardisk_original.png"
 
 [display]
 
-window/size/width=300
-window/size/height=300
+window/size/viewport_width=1280
+window/size/viewport_height=720
 
 [editor_plugins]
 
-enabled=PoolStringArray( "PersistenceNode" )
+enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/persistence_node/plugin.cfg")
 
 [rendering]
 
-environment/default_environment="res://default_env.tres"
+renderer/rendering_method="gl_compatibility"

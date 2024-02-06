@@ -1,9 +1,0 @@
-[gd_scene load_steps=2 format=2]
-
-[ext_resource path="res://addons/PersistenceNode/persistence_node.gd" type="Script" id=1]
-
-[node name="Persistence" type="Node"]
-script = ExtResource( 1 )
-mode = 1
-debug_on = true
-

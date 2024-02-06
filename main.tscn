@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ubrp0518t57n"]
+
+[ext_resource type="Script" path="res://addons/persistence_node/persistence_node.gd" id="1_lqiql"]
+
+[node name="Main" type="Node"]
+
+[node name="Persistence" type="Node" parent="."]
+script = ExtResource("1_lqiql")
