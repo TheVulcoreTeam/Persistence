@@ -2,8 +2,3 @@
 .directory
 .vscode
 .godot
-
-/main.tscn
-
-# To test the plugin it is necessary to install the GUT addon
-/addons/gut
