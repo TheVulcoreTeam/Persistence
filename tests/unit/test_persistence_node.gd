@@ -129,3 +129,16 @@ func test_load_data_text():
 		pass_test("load_data, passing")
 	else:
 		fail_test("load_data_text: save_something key, not exist, failed")
+
+
+func test_delete_file_development():
+	persistence_node_text.delete_file()
+	
+	assert_eq(persistence_node_text.data, {})
+
+
+func test_delete_file_production():
+	persistence_node_var.delete_file()
+	
+	assert_eq(persistence_node_var.data, {})
+

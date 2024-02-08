@@ -16,13 +16,11 @@ script = ExtResource("1_xe0pl")
 script = ExtResource("1_kwirt")
 folder_name = "saves_example"
 file_name = "character_data"
-mode = 1
 
 [node name="GeneralConfigData" type="Node" parent="."]
 script = ExtResource("1_kwirt")
 folder_name = "saves_example"
 file_name = "general_config_data"
-mode = 1
 
 [node name="Container" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -37,6 +35,3 @@ custom_minimum_size = Vector2(200, 200)
 layout_mode = 2
 text = "Delete
 Data"
-
-[node name="Persistence" type="Node" parent="."]
-script = ExtResource("1_kwirt")

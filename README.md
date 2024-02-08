@@ -26,11 +26,11 @@ The **persistence node** consists of obtaining the `data` and storing it in pers
 
 To obtain the `data` we use our custom node *Persistence*. `data` is a property of *persistence* node you can get that data and write de dictionary but **Don't override the dictionary**
 
-**BAD**:
+- **BAD**:
 
 `$MyPersistenceNode.data = { "new dictionary" : "something" }`
 
-**GOD**:
+- **GOD**:
 
 `$MyPersistenceNode.data["something"] = "data here"`
 
@@ -43,7 +43,6 @@ Let's see the properties of the "persistence" node in the inspector.
 
 ## Properties and Functions
 
-
 | Properties | Usage                                                                                    |
 |------------|------------------------------------------------------------------------------------------|
 | `data`     | (Only Read) You can access the data and then save it in this way $MyPersistenceNode.data |
@@ -54,6 +53,8 @@ Let's see the properties of the "persistence" node in the inspector.
 | `save()`        | Stores data in persistent memory, stores the data in persistent memory, in a json file, or in an encrypted binary file. |
 | `delete_file()` | Delete current file.                                                                                                    |
 
+
+## Inspector
 
 ![Inspector](images/inspector.png)
 
