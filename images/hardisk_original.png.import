@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dmm055n8h4dkv"
-path="res://.godot/imported/hardisk_original.png-147d48039ac8db0c45a40751c261e815.ctex"
+uid="uid://ivpvo0jkpjqk"
+path="res://.godot/imported/hardisk_original.png-5f4a716aaac5504979b81cb908945a8d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://hardisk_original.png"
-dest_files=["res://.godot/imported/hardisk_original.png-147d48039ac8db0c45a40751c261e815.ctex"]
+source_file="res://images/hardisk_original.png"
+dest_files=["res://.godot/imported/hardisk_original.png-5f4a716aaac5504979b81cb908945a8d.ctex"]
 
 [params]
 

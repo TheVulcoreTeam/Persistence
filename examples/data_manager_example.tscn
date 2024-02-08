@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://ubrp0518t57n"]
+
+[ext_resource type="Script" path="res://addons/persistence_node/persistence_node.gd" id="1_kwirt"]
+[ext_resource type="Script" path="res://examples/data_manager_example.gd" id="1_xe0pl"]
+
+[node name="DataManagerExample" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xe0pl")
+
+[node name="CharacterData" type="Node" parent="."]
+script = ExtResource("1_kwirt")
+folder_name = "saves_example"
+file_name = "character_data"
+mode = 1
+
+[node name="GeneralConfigData" type="Node" parent="."]
+script = ExtResource("1_kwirt")
+folder_name = "saves_example"
+file_name = "general_config_data"
+mode = 1
+
+[node name="Container" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Delete" type="Button" parent="Container"]
+custom_minimum_size = Vector2(200, 200)
+layout_mode = 2
+text = "Delete
+Data"
+
+[node name="Persistence" type="Node" parent="."]
+script = ExtResource("1_kwirt")

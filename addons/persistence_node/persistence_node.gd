@@ -35,6 +35,7 @@ const PERSISTENCE_PREFIX = "[PersistenceNode]"
 const ERROR_KEY = 'ERROR'
 const CANT_DIRECTORY_ACCESS = "Can't access to directory"
 const CANT_DIRECTORY_CREATE = "Can't create directory"
+const CANT_FILE_DELETE = "Can't delete file"
 const NO_EXPLICIT_DATA = 'You cannot assign data explicitly, add data using a keys like data["key"] = "something to add".'
 const DO_NOT_CHARGE_MORE_THAT_ONCE = 'Do not charge more that once time due to performance issues'
 
@@ -87,14 +88,6 @@ var data := {} :
 						)
 						_error = FileAccess.get_open_error()
 						
-						#if _error == Error.ERR_FILE_NOT_FOUND:
-							#file = FileAccess.open_encrypted_with_pass(
-								#_file_path, 
-								#FileAccess.WRITE_READ,
-								#password_env_production
-							#)
-							#_error = FileAccess.get_open_error()
-						
 						var content : Dictionary = file.get_var(store_objects)
 						file.close()
 						
@@ -124,6 +117,7 @@ var data := {} :
 							data = {}
 						else:
 							data = JSON.parse_string(content)
+					
 			else:
 				_debug_persistence_node(CANT_DIRECTORY_ACCESS)
 		
@@ -174,6 +168,16 @@ func save() -> void:
 				file.close()
 	else:
 		_debug_persistence_node(CANT_DIRECTORY_ACCESS)
+
+
+func delete_file():
+	var dir = DirAccess.open(_file_path)
+	
+	if dir.file_exists(_file_path):
+		_error = dir.remove(_file_path)
+		
+		if _error != OK:
+			_debug_persistence_node(str(CANT_FILE_DELETE, " Error: ", _error))
 
 
 func _debug_persistence_node(message : String) -> void:
