@@ -46,7 +46,7 @@ const FILE_PATH_EMPTY = '_file_path is empty'
 @export var file_name := "data"
 @export var extention_env_production := ".binary"
 @export var extention_env_development := ".json"
-@export var password_env_production:= ""
+@export var password_env_production := ""
 
 @export_category("Enviroment")
 
@@ -82,35 +82,49 @@ var data := {} :
 			if dir_exists:
 				match mode:
 					Mode.ENV_PRODUCTION:
-						_file_path = str("user://" + folder_name + "/" + file_name + extention_env_production)
-						
-						file = FileAccess.open_encrypted_with_pass(
-							_file_path,
-							FileAccess.READ,
-							password_env_production
+						_file_path = str(
+							"user://" + 
+							folder_name + 
+							"/" + 
+							file_name + 
+							extention_env_production
 						)
-						_error = FileAccess.get_open_error()
 						
-						if not is_instance_valid(file):
+						var file_exists = FileAccess.file_exists(_file_path)
+						
+						# open_encrypted_with_pass() doesn't support WRITE_READ mode
+						# https://github.com/godotengine/godot/issues/32881
+						
+						if file_exists:
 							file = FileAccess.open_encrypted_with_pass(
 								_file_path,
-								FileAccess.WRITE_READ,
+								FileAccess.READ,
 								password_env_production
 							)
-							_error = FileAccess.get_open_error()
-						
-						var content : Dictionary = file.get_var(store_objects)
-						file.close()
-						
-						_can_save_without_warning = true
-						
-						if not content:
-							data = {}
+							
+							_can_save_without_warning = true
+							data = file.get_var(store_objects)
 						else:
-							data = content
-					
+							file = FileAccess.open_encrypted_with_pass(
+								_file_path,
+								FileAccess.WRITE,
+								password_env_production
+							)
+							file.store_var(data, store_objects)
+						
+						_error = FileAccess.get_open_error()
+						
+						if is_instance_valid(file):
+							file.close()
+						
 					Mode.ENV_DEVELOPMENT:
-						_file_path = str("user://" + folder_name + "/" + file_name + extention_env_development)
+						_file_path = str(
+							"user://" + 
+							folder_name + 
+							"/" + 
+							file_name + 
+							extention_env_development
+						)
 						
 						file = FileAccess.open(_file_path, FileAccess.READ)
 						
@@ -201,10 +215,9 @@ func delete_file():
 		_one_charge = true
 		
 		data.clear()
-		print(typeof(data))
 		
 		if _error != OK:
-			_debug_persistence_node(str(CANT_FILE_DELETE, " Error: ", _error))
+			_debug_persistence_node(str(CANT_FILE_DELETE, " - ERROR: ", _error))
 	elif _file_path.is_empty():
 		_debug_persistence_node(str(FILE_PATH_EMPTY))
 	else:
