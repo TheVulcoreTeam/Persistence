@@ -1,6 +1,6 @@
 ![Hardisk](images/hardisk_original.png)
 
-# PersistenceNode
+# Persistence Node
 
 
 Addon to store data in text or encrypted files, in Godot Engine 4, in an easy way.
@@ -17,7 +17,12 @@ Addon to store data in text or encrypted files, in Godot Engine 4, in an easy wa
 
 # Installation
 
-Soon
+1. Download the [last release](https://github.com/TheVulcoreTeam/Persistence/releases) from your Godot Version
+2. Extract the folder downloaded
+3. Coppy the addon folder to the root directory of your game, for example: ./my-game/addons
+4. (OPTIONAL) if you are using another addons you can move only the folder persistence_node to ./my-game/addons/
+5. Active de addon in project -> project settings -> addons -> Peristence Node (enable)
+6. And that, follow the explanation **;-)**
 
 
 # Explanation
@@ -30,22 +35,22 @@ To obtain the `data` we use our custom node *Persistence*. `data` is a property 
 
 `$MyPersistenceNode.data = { "new dictionary" : "something" }`
 
-- **GOD**:
+- **GOOD**:
 
 `$MyPersistenceNode.data["something"] = "data here"`
 
-The line marked **Bad** is different because it is trying to overwrite the value of the data dictionary to be stored in persistent memory.
+The line marked **BAD** is different because it is trying to overwrite the value of the data dictionary to be stored in persistent memory.
 
-On the other hand, the **God** line is different because it is adding or changing the information of "something".
+On the other hand, the **GOOD** line is different because it is adding or changing the information of "something".
 
 Let's see the properties of the "persistence" node in the inspector.
 
 
 ## Properties and Functions
 
-| Properties | Usage                                                                                    |
-|------------|------------------------------------------------------------------------------------------|
-| `data`     | (Only Read) You can access the data and then save it in this way $MyPersistenceNode.data |
+| Properties | Usage                                                                                      |
+|------------|--------------------------------------------------------------------------------------------|
+| `data`     | (Only Read) You can access the data and then save it in this way `$MyPersistenceNode.data` |
 
 
 | Functions       | Usage                                                                                                                   |
@@ -71,11 +76,11 @@ Let's see the properties of the "persistence" node in the inspector.
 ## Recomendations
 
 - Use the `save()` function only when necessary, since it accesses persistent memory and this is slower than accessing volatile memory such as RAM.
-  - **Bad**: Use `save()` every time a bullet is fired in the game, to store at each moment the information of the number of bullets the player has.
-  - **Good**: Use `save()` when exiting the game or the main game screen.
+  - **BAD**: Use `save()` every time a bullet is fired in the game, to store at each moment the information of the number of bullets the player has.
+  - **GOOD**: Use `save()` when exiting the game or the main game screen.
 - Use a persistence node for each file that is created.
 
 
 # Tutorial (In Spanish)
 
-Soon
+- [Godot Addons : Persistence Node 2024](https://youtu.be/x0uxz74DVlg)
