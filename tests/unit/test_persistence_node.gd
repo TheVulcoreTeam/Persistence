@@ -141,4 +141,3 @@ func test_delete_file_production():
 	persistence_node_var.delete_file()
 	
 	assert_eq(persistence_node_var.data, {})
-

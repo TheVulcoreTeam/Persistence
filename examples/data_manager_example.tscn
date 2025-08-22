@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ubrp0518t57n"]
 
-[ext_resource type="Script" path="res://addons/persistence_node/persistence_node.gd" id="1_kwirt"]
-[ext_resource type="Script" path="res://examples/data_manager_example.gd" id="1_xe0pl"]
+[ext_resource type="Script" uid="uid://b82hvskt8v2sn" path="res://addons/persistence_node/persistence_node.gd" id="1_kwirt"]
+[ext_resource type="Script" uid="uid://06seh1w6t83w" path="res://examples/data_manager_example.gd" id="1_xe0pl"]
 
 [node name="DataManagerExample" type="Control"]
 layout_mode = 3

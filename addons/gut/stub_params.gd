@@ -1,13 +1,19 @@
-var _utils = load('res://addons/gut/utils.gd').get_instance()
-var _lgr = _utils.get_logger()
+
+var _lgr = GutUtils.get_logger()
+var logger = _lgr :
+	get: return _lgr
+	set(val): _lgr = val
 
 var return_val = null
 var stub_target = null
-var target_subpath = null
 # the parameter values to match method call on.
 var parameters = null
 var stub_method = null
 var call_super = false
+var call_this = null
+# Whether this is a stub for default parameter values as they are defined in
+# the script, and not an overridden default value.
+var is_script_default = false
 
 # -- Paramter Override --
 # Parmater overrides are stored in here along with all the other stub info
@@ -27,10 +33,39 @@ var _parameter_override_only = true
 
 const NOT_SET = '|_1_this_is_not_set_1_|'
 
-func _init(target=null, method=null, subpath=null):
+func _init(target=null, method=null, _subpath=null):
 	stub_target = target
 	stub_method = method
-	target_subpath = subpath
+
+	if(typeof(target) == TYPE_CALLABLE):
+		stub_target = target.get_object()
+		stub_method = target.get_method()
+		parameters = target.get_bound_arguments()
+		if(parameters.size() == 0):
+			parameters = null
+	elif(typeof(target) == TYPE_STRING):
+		if(target.is_absolute_path()):
+			stub_target = load(str(target))
+		else:
+			_lgr.warn(str(target, ' is not a valid path'))
+
+	if(stub_target is PackedScene):
+		stub_target = GutUtils.get_scene_script_object(stub_target)
+
+	# this is used internally to stub default parameters for everything that is
+	# doubled...or something.  Look for stub_defaults_from_meta for usage.  This
+	# behavior is not to be used by end users.
+	if(typeof(method) == TYPE_DICTIONARY):
+		_load_defaults_from_metadata(method)
+
+
+func _load_defaults_from_metadata(meta):
+	stub_method = meta.name
+	var values = meta.default_args.duplicate()
+	while (values.size() < meta.args.size()):
+		values.push_front(null)
+
+	param_defaults(values)
 
 
 func to_return(val):
@@ -49,11 +84,13 @@ func to_do_nothing():
 
 
 func to_call_super():
-	if(stub_method == '_init'):
-		_lgr.error("You cannot stub _init to call super.  Super's _init is always called.")
-	else:
-		call_super = true
-		_parameter_override_only = false
+	call_super = true
+	_parameter_override_only = false
+	return self
+
+
+func to_call(callable : Callable):
+	call_this = callable
 	return self
 
 
@@ -62,7 +99,7 @@ func when_passed(p1=NOT_SET,p2=NOT_SET,p3=NOT_SET,p4=NOT_SET,p5=NOT_SET,p6=NOT_S
 	var idx = 0
 	while(idx < parameters.size()):
 		if(str(parameters[idx]) == NOT_SET):
-			parameters.remove(idx)
+			parameters.remove_at(idx)
 		else:
 			idx += 1
 	return self
@@ -84,30 +121,32 @@ func has_param_override():
 
 
 func is_param_override_only():
-	var to_return = false
+	var ret_val = false
 	if(has_param_override()):
-		to_return = _parameter_override_only
-	return to_return
+		ret_val = _parameter_override_only
+	return ret_val
 
 
 func to_s():
-	var base_string = str(stub_target)
-	if(target_subpath != null):
-		base_string += str('[', target_subpath, '].')
-	else:
-		base_string += '.'
-	base_string += stub_method
+	var base_string = str(stub_target, '.', stub_method)
 
 	if(has_param_override()):
 		base_string += str(' (param count override=', parameter_count, ' defaults=', parameter_defaults)
 		if(is_param_override_only()):
 			base_string += " ONLY"
+		if(is_script_default):
+			base_string += " script default"
 		base_string += ') '
 
 	if(call_super):
 		base_string += " to call SUPER"
 
+	if(call_this != null):
+		base_string += str(" to call ", call_this)
+
 	if(parameters != null):
 		base_string += str(' with params (', parameters, ') returns ', return_val)
+	else:
+		base_string += str(' returns ', return_val)
 
 	return base_string

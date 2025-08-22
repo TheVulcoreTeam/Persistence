@@ -12,7 +12,7 @@ config_version=5
 
 config/name="PersistenceNode"
 run/main_scene="res://examples/data_manager_example.tscn"
-config/features=PackedStringArray("4.2")
+config/features=PackedStringArray("4.4")
 config/icon="res://images/hardisk_original.png"
 
 [display]
