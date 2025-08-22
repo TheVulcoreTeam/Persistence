@@ -2,7 +2,7 @@
 #
 # Persistence Node
 #
-# Copyright (c) 2018-2024 Matías Muñoz Espinoza
+# Copyright (c) 2018-2025 Matías Valentín Muñoz Espinoza
 # Copyright (c) 2019 Jeremi Biernacki
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -103,16 +103,26 @@ var data := {} :
 							)
 							
 							_can_save_without_warning = true
-							data = file.get_var(store_objects)
+							_error = FileAccess.get_open_error()
+							
+							if _error == OK:
+								data = file.get_var(store_objects)
+							else:
+								_debug_persistence_node(ERROR_KEY + ": " + str(_error))
+								
 						else:
 							file = FileAccess.open_encrypted_with_pass(
 								_file_path,
 								FileAccess.WRITE,
 								password_env_production
 							)
-							file.store_var(data, store_objects)
-						
-						_error = FileAccess.get_open_error()
+							
+							_error = FileAccess.get_open_error()
+							
+							if _error == OK:
+								file.store_var(data, store_objects)
+							else:
+								_debug_persistence_node(ERROR_KEY + ": " + str(_error))
 						
 						if is_instance_valid(file):
 							file.close()
@@ -228,4 +238,3 @@ func _debug_persistence_node(message : String) -> void:
 	if warnings:
 		var format = str(PERSISTENCE_PREFIX, " ", message)
 		push_warning(format)
-
