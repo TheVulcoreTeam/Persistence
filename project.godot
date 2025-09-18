@@ -11,8 +11,9 @@ config_version=5
 [application]
 
 config/name="PersistenceNode"
+config/tags=PackedStringArray("vulcoreteam")
 run/main_scene="res://examples/data_manager_example.tscn"
-config/features=PackedStringArray("4.4")
+config/features=PackedStringArray("4.5")
 config/icon="res://images/hardisk_original.png"
 
 [display]

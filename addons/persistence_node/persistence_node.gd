@@ -109,7 +109,7 @@ var data := {} :
 								data = file.get_var(store_objects)
 							else:
 								_debug_persistence_node(ERROR_KEY + ": " + str(_error))
-								
+						
 						else:
 							file = FileAccess.open_encrypted_with_pass(
 								_file_path,
