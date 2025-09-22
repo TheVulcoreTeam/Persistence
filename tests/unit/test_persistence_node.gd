@@ -45,6 +45,7 @@ func test_get_and_save_development():
 	persistence_node_text.save()
 	
 	assert_eq(data_text["save_something"], "something_txt")
+	
 	pass_test("get_and_save_development, passing")
 
 
@@ -98,27 +99,34 @@ func test_save_data_more_that_one_time_production():
 		1 : true,
 		3.14 : Vector2(1.2, 1.4)
 	})
+	
 	pass_test("save_data_more_that_one_time_production, passing")
 
 
-func test_error_to_change_data_explicitly_production():
-	var old_data = persistence_node_var.data
-	
-	# The data can't be changed explicitly
-	persistence_node_var.data = {"something" : "something"}
-	
-	assert_eq(persistence_node_var.data, old_data)
-	pass_test("error_to_change_data_explicitly_production, passing")
-
-
-func test_error_to_change_data_explicitly_development():
-	var old_data = persistence_node_text.data
-	
-	# The data can't be changed explicitly
-	persistence_node_text.data = {"something" : "something"}
-	
-	assert_eq(persistence_node_text.data, old_data)
-	pass_test("error_to_change_data_explicitly_development, passing")
+#func test_error_to_change_data_explicitly_production():
+	#var old_data = persistence_node_var.data.duplicate_deep(5)
+	#
+	## The data can't be changed explicitly
+	#var new_data = {"something" : "something"}
+	#persistence_node_var.data = new_data
+	#
+	#assert_true(persistence_node_var.data.recursive_equal(old_data, 5), "persistence_node_var.data == old_data [PASSING]")
+	#assert_false(persistence_node_var.data.recursive_equal(new_data, 5), "persistence_node_var.data != new_data [PASSING]")
+	#
+	#pass_test("error_to_change_data_explicitly_production, passing")
+#
+#
+#func test_error_to_change_data_explicitly_development():
+	#var old_data = persistence_node_text.data.duplicate_deep(5)
+	#
+	## The data can't be changed explicitly
+	#var new_data = {"something" : "something"}
+	#persistence_node_text.data = new_data
+	#
+	#assert_true(persistence_node_text.data.recursive_equal(old_data, 5), "persistence_node_text.data == old_data [PASSING]")
+	#assert_false(persistence_node_text.data.recursive_equal(new_data, 5), "persistence_node_text.data != new_data [PASSING]")
+	#
+	#pass_test("error_to_change_data_explicitly_development, passing")
 
 
 func test_load_data_text():
@@ -126,6 +134,7 @@ func test_load_data_text():
 	
 	if data_text.has("save_something"):
 		assert_eq(data_text["save_something"], "something_txt")
+		
 		pass_test("load_data, passing")
 	else:
 		fail_test("load_data_text: save_something key, not exist, failed")

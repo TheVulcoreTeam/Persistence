@@ -10,7 +10,7 @@ Addon to store data in text or encrypted files, in Godot Engine 4, in an easy wa
 
 # Branchs
 
-- main: Default development branch for Godot 4
+- main: Default development branch for Godot 4.x
 - for-godot-3.0: Branch for Godot 3.x
 - for-godot-2.1: Branch for Godot 2.x
 
@@ -29,22 +29,19 @@ Addon to store data in text or encrypted files, in Godot Engine 4, in an easy wa
 
 The **persistence node** consists of obtaining the `data` and storing it in persistent memory when needed.
 
-To obtain the `data` we use our custom node *Persistence*. `data` is a property of *persistence* node you can get that data and write de dictionary but **Don't override the dictionary**
+To obtain the `data` we use our custom node *Persistence*. `data` is a property of *persistence* node you can get that data and write de dictionary
 
-- **BAD**:
+- **NOT VERY BAD**:
 
 `$MyPersistenceNode.data = { "new dictionary" : "something" }`
 
-- **GOOD**:
+- **RECOMENDED**:
 
 `$MyPersistenceNode.data["something"] = "data here"`
 
-The line marked **BAD** is different because it is trying to overwrite the value of the data dictionary to be stored in persistent memory.
+In **Godot 4.5**, there are no longer many differences between using the **NOT VERY BAD** and **RECOMMENDED** versions, since in both cases the dictionary is overwritten or a new key/value is added.
 
-On the other hand, the **GOOD** line is different because it is adding or changing the information of "something".
-
-Let's see the properties of the "persistence" node in the inspector.
-
+However, there are differences in the **Godot 4.4** version.
 
 ## Properties and Functions
 

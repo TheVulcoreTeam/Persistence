@@ -37,7 +37,6 @@ const CANT_DIRECTORY_ACCESS = "Can't access to directory"
 const CANT_DIRECTORY_CREATE = "Can't create directory"
 const CANT_FILE_DELETE = "Can't delete file"
 const NULL_DIRECTORY_OR_NOT_EXIST = "The directory is null or not exist"
-const NO_EXPLICIT_DATA = 'You cannot assign data explicitly, add data using a keys like data["key"] = "something to add".'
 const DO_NOT_CHARGE_MORE_THAT_ONCE = 'Do not charge more that once time due to performance issues'
 const FILE_PATH_EMPTY = '_file_path is empty'
 
@@ -163,13 +162,6 @@ var data := {} :
 		if _can_save_without_warning:
 			_can_save_without_warning = false
 			data = value
-		else:
-			_debug_persistence_node(
-				NO_EXPLICIT_DATA + " : " +
-				str(value)
-			)
-			
-			# data is not change
 
 
 func save() -> void:
