@@ -103,30 +103,42 @@ func test_save_data_more_that_one_time_production():
 	pass_test("save_data_more_that_one_time_production, passing")
 
 
-#func test_error_to_change_data_explicitly_production():
-	#var old_data = persistence_node_var.data.duplicate_deep(5)
-	#
-	## The data can't be changed explicitly
-	#var new_data = {"something" : "something"}
-	#persistence_node_var.data = new_data
-	#
-	#assert_true(persistence_node_var.data.recursive_equal(old_data, 5), "persistence_node_var.data == old_data [PASSING]")
-	#assert_false(persistence_node_var.data.recursive_equal(new_data, 5), "persistence_node_var.data != new_data [PASSING]")
-	#
-	#pass_test("error_to_change_data_explicitly_production, passing")
-#
-#
-#func test_error_to_change_data_explicitly_development():
-	#var old_data = persistence_node_text.data.duplicate_deep(5)
-	#
-	## The data can't be changed explicitly
-	#var new_data = {"something" : "something"}
-	#persistence_node_text.data = new_data
-	#
-	#assert_true(persistence_node_text.data.recursive_equal(old_data, 5), "persistence_node_text.data == old_data [PASSING]")
-	#assert_false(persistence_node_text.data.recursive_equal(new_data, 5), "persistence_node_text.data != new_data [PASSING]")
-	#
-	#pass_test("error_to_change_data_explicitly_development, passing")
+func test_if_data_completely_changed_production():
+	var persistence_node_var_2 = Persistence.new()
+	persistence_node_var_2.folder_name = "tests"
+	persistence_node_var_2.file_name = "test2"
+	persistence_node_var_2.warnings = true
+	persistence_node_var_2.name = "PersistenceNodeVar2"
+	persistence_node_var_2.mode = Persistence.Mode.ENV_PRODUCTION
+	
+	var the_data = persistence_node_var_2.data
+	the_data["foo"] = "bar"
+	the_data["baz"] = "bax"
+	assert_eq(persistence_node_var_2.data, the_data)
+	
+	the_data = {"xd1" = "xd2"}
+	assert_eq(the_data, {"xd1" = "xd2"})
+	
+	pass_test("test_if_data_completely_changed_production, passing")
+
+
+func test_if_data_completely_changed_development():
+	var persistence_node_text_2 = Persistence.new()
+	persistence_node_text_2.folder_name = "tests"
+	persistence_node_text_2.file_name = "test2"
+	persistence_node_text_2.warnings = true
+	persistence_node_text_2.name = "PersistenceNodeText2"
+	persistence_node_text_2.mode = Persistence.Mode.ENV_DEVELOPMENT
+	
+	var the_data = persistence_node_text_2.data
+	the_data["foo"] = "bar"
+	the_data["baz"] = "bax"
+	assert_eq(persistence_node_text_2.data, the_data)
+	
+	the_data = {"xd1" = "xd2"}
+	assert_eq(the_data, {"xd1" = "xd2"})
+	
+	pass_test("test_if_data_completely_changed_development, passing")
 
 
 func test_load_data_text():

@@ -29,9 +29,9 @@ Addon to store data in text or encrypted files, in Godot Engine 4, in an easy wa
 
 The **persistence node** consists of obtaining the `data` and storing it in persistent memory when needed.
 
-To obtain the `data` we use our custom node *Persistence*. `data` is a property of *persistence* node you can get that data and write de dictionary
+To obtain the `data` we use our custom node *Persistence*. `data` is a property of *Persistence* node you can get that data and write de dictionary. Remember that dictionaries are passed by reference, so if you completely overwrite the dictionary, the rest of the data will be deleted.
 
-- **NOT VERY BAD**:
+- **BAD**:
 
 `$MyPersistenceNode.data = { "new dictionary" : "something" }`
 
@@ -39,9 +39,10 @@ To obtain the `data` we use our custom node *Persistence*. `data` is a property 
 
 `$MyPersistenceNode.data["something"] = "data here"`
 
-In **Godot 4.5**, there are no longer many differences between using the **NOT VERY BAD** and **RECOMMENDED** versions, since in both cases the dictionary is overwritten or a new key/value is added.
+In the line marked as **BAD** the dictionary is being overwritten, which deletes all the data in the dictionary and only adds the new dictionary. It is not recommended for use.
 
-However, there are differences in the **Godot 4.4** version.
+On the other hand, the line marked as **RECOMENDED** only adds a new key/value pair.
+
 
 ## Properties and Functions
 
