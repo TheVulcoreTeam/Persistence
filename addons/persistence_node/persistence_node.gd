@@ -2,7 +2,7 @@
 #
 # Persistence Node
 #
-# Copyright (c) 2018-2025 Matías Valentín Muñoz Espinoza
+# Copyright (c) 2018-2026 Matías Valentín Muñoz Espinoza
 # Copyright (c) 2019 Jeremi Biernacki
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
